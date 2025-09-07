@@ -402,17 +402,40 @@ async function clickElementoPorXPath(page, xpath_selector) {
   let numero = 0;
   let numero2 = 0;
 
-  delay(2000);
+ await  delay(10000);
 
   //Se obtiene el nuero de pedidos
   const xpath_numeropedidos = "/html/body/div[1]/div[2]/div/div/div[3]/div[4]/div[2]/div[2]/div[1]/div/span[1]";
-  const numero_pedidos = await obtenerTextoPorXPath(page, xpath_numeropedidos);
-  
+                            
+  var numero_pedidos = await obtenerTextoPorXPath(page, xpath_numeropedidos);
+
+  console.log(`numero pedidos: s${numero_pedidos}`);
+  if(!numero_pedidos)
+  {
+      const xpath_numeropedidos = '/html/body/div[1]/div[2]/div/div/div[3]/div[5]/div[2]/div[2]/div[1]/div/span[1]';
+                            
+      const numero_pedidos = await obtenerTextoPorXPath(page, xpath_numeropedidos);
+  }
+  if(!numero_pedidos)
+  {
+var holi ="/html/body/div[1]/div[2]/div/div/div[3]/div[5]/div[2]/div[2]/div[1]/div/span[1]";
+          //*[@id="MYO-app"]/div/div[1]/div[1]/div/div[7]/div/div/div[1]/div[2]/div/div[1]/div/div[2]
+         numero_pedidos = await page.evaluate((xpath) => {
+          var el2 = document.evaluate(
+            xpath,
+            document,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+          ).singleNodeValue;
+          return el2 ? el2.textContent.trim() : null;
+        }, holi); // aquí pasas la variable como
+  }
 
   //Se divide el numero de pedidos para obtener el numero 
 
-  const entero_numero_pedidos = extraerNumerosDeString(numero_pedidos);
-  //console.log("Número de pedidos:", entero_numero_pedidos);
+  const entero_numero_pedidos = await extraerNumerosDeString(numero_pedidos);
+  console.log("Número de pedidos:", entero_numero_pedidos);
   
   //Aqui se manda a llamar la funcion con elnombre del archivo y se crea el excel
   const nombreArchivo = dia +"_" + mes_temp + "_" +año +"_" +hour +"_" +minute +"_" +milisec +".xlsx";
@@ -459,10 +482,27 @@ async function clickElementoPorXPath(page, xpath_selector) {
       cuenta = 300;
       cuentan = 3;
     }
-    
+    await delay(2000);
     //Se obtiene la fecha1 de los pedidos 
     let xpath_fechapedidos ="/html/body/div[1]/div[2]/div/div/div[3]/div[4]/div[2]/div[4]/div/div[2]/table/tbody/tr[" + n +"]/td[2]/div/div[2]/div";
     let fecha_pedidos1 = await obtenerTextoPorXPath(page, xpath_fechapedidos);
+
+    if(!fecha_pedidos1)
+    { 
+                           
+      var holi ="/html/body/div[1]/div[2]/div/div/div[3]/div[5]/div[2]/div[4]/div/div[2]/table/tbody/tr[" + n +"]/td[2]/div/div[2]/div";
+          //*[@id="MYO-app"]/div/div[1]/div[1]/div/div[7]/div/div/div[1]/div[2]/div/div[1]/div/div[2]
+         fecha_pedidos1 = await page.evaluate((xpath) => {
+          var el2 = document.evaluate(
+            xpath,
+            document,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+          ).singleNodeValue;
+          return el2 ? el2.textContent.trim() : null;
+        }, holi); // aquí pasas la variable como
+    }
     console.log("Fecha de pedidos1:",fecha_pedidos1);
     //Se compara si la fecha es diferente de 4 dias si no se termina el script
     if (
